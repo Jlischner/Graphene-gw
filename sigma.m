@@ -11,7 +11,7 @@ s = bands(2); %# band index
 ky = 0.001; %# in units of kF
 nus = [0.2:0.2:3.]'; %# freq. for sigma, in units of EF
 
-global vF = 10^8*cm/sec;
+global vF = 10^8*cm/sec; %# fermi velocity
 global kF = sqrt(pi*n);
 ky *= kF;
 global EF = vF*kF;
