@@ -2,35 +2,32 @@ more off;
 angstrom = 1/0.5291;
 sec = 1/2.418884326505e-17; %# wikipedia: atomic units
 cm = 10^8*angstrom;
-kappa = 4.3747; %# background dielectric constant
-kc = 1/angstrom; %# cutoff wave vector
+kc = 1/(2.46*angstrom); %# cutoff wave vector
 bands = [-1 +1];
 
-n = 10^12/cm^2; %# electron density
-s = bands(2); %# band index
-ky = 0.001; %# in units of kF
-nus = [0.2:0.2:3.]'; %# freq. for sigma, in units of EF
+%# read input
+input;
 
-global vF = 10^8*cm/sec; %# fermi velocity
-global kF = sqrt(pi*n);
-ky *= kF;
-global EF = vF*kF;
+global e0 = 1.0
+global vF = 10^8*cm/sec;
+global EF = EFeV/27.21;
+global kF = EF/vF;
 global mu = EF;
+k  = [0 ky*kF];
+n   = kF^2/pi*cm^2; %# electron density 
 
 %# good convergence parameters:
 %# dphi = 0.04 and du=0.001
-phis  = [0:0.04:2*pi]';
+phis  = [0:0.01:2*pi]';
 dphi = phis(2)-phis(1);
 us   = [0.001:0.001:1]';
 qs   = kc*us.^2;
 Nq   = length(qs);
 global Vc = 2*pi/kappa./abs(qs);
 
-wcut  = 2.; %# in units of EF                           
-wsf   = [0.0001:0.1:wcut]'*EF;
-wsc   = [wcut: 2. : 300]'*EF;
-ws    = [wsf; wsc];
-Nfreq= length(ws);
+wts = [0.0:0.2:15]'*sqrt(EF);
+ws = wts.^2;
+Nfreq= length(wts);
 
 %# get dielectric matrix for line integral
 epsC = zeros(Nq,Nfreq);
@@ -46,7 +43,7 @@ for nu = nus';
 
   nu
   w = nu*EF;
-  k = [0 ky];
+#  k = [0 ky];
 
   SigX = 0.;
   SigP = 0.;
@@ -67,7 +64,7 @@ for nu = nus';
       for n = 1:Nfreq;
 	SigLv(n) += trapz(us, uFss.*(xi-w)./( (xi-w).^2 + ws(n).^2) .* IepsC(:,n) );
       endfor;
-      SigL += trapz(ws, SigLv);
+      SigL += trapz(wts,2*wts.* SigLv);
       
     endfor;%# end phis loop
   endfor;%# end bands loop
@@ -81,4 +78,9 @@ for nu = nus';
   SigLw = [SigLw; SigL];
 
 endfor;%# end nus loop
+
+Sig = SigXw + SigPw + SigLw;
+xi  = s*vF*norm(k)-EF;
+ws  = nus*EF;
+save output Sig ws xi EF kF SigXw SigPw SigLw
 more on;

@@ -1,24 +1,18 @@
-function epsilon = Cdiel(q,w)
-
-  g = 4;
+function epsilon = Cdiel(qs, w);
   global vF;
   global EF;
-  global kF;
   global Vc;
-  x = q/kF;
+  global e0;
 
-  aw = I*abs(w);
-  nu = aw/EF;
-
-  F  = g/16/pi* vF^2*q.^2 ./sqrt(aw.^2 - vF^2*q.^2);
+  Omega = abs(w);
   
-  dP = -g*EF/2/pi/vF^2 + F/vF^2 .* ( G((nu+2)./x) -...
-	(((2-nu)./x-1.)>0).* (G((2-nu)./x) - I*pi) - (((nu-2)./x+1.)>0).*G((nu-2)./x) );
-
-  P0 = -I*pi*F/vF^2; 
-  Pi  = P0 + dP;
-
-  epsilon = 1. -Vc .* Pi;
-  epsilon = real(epsilon);
+  chiMDF = -qs.^2./16./sqrt( Omega^2 + vF^2*qs.^2 ) - ...
+      EF/2/pi/vF^2 + qs.^2./8/pi./sqrt( Omega^2 + vF^2*qs.^2 ) .*...
+      real( asin( (2*EF+I*Omega)/vF./qs ) + (2*EF+I*Omega)/vF./qs .*...
+	   sqrt(1-(( 2*EF + I*Omega )/vF./qs ).^2 ) );
   
+  Pi0 = -qs.^2/16./sqrt(Omega^2+vF^2*qs.^2);
+  Pi = 4*chiMDF;
+  epsilon = e0 - Vc .* Pi;
+
 endfunction;

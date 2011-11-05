@@ -5,6 +5,8 @@ function epsilon = diel(q,w)
   global EF;
   global kF;
   global Vc;
+  global e0;
+
   eta = 0.03;
   x = q/kF;
 
@@ -19,7 +21,7 @@ function epsilon = diel(q,w)
   P0 = -I*pi*F/vF^2; 
   Pi  = P0 + dP;
 
-  epsilon = 1. -Vc .* Pi + I*eta;
+  epsilon = e0 -Vc .* Pi + I*eta;
   epsilon(w<0) = epsilon(w<0)';
   #epsilon = Pi;
 endfunction;
