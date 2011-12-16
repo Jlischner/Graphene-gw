@@ -7,7 +7,7 @@ function epsilon = diel(q,w)
   global Vc;
   global e0;
 
-  eta = 0.03;
+  eta = 0.01;
   x = q/kF;
 
   aw = abs(w);
