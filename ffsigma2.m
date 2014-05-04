@@ -22,6 +22,9 @@ elseif( kcoption == 2);
 elseif( kcoption == 3);
   printf("kc=30*kF cutoff \n");
   kc = 30*kF;
+elseif( kcoption == 4);
+  Ec = 7/27.21;
+  kc = Ec/vF;
 endif;
 printf("kc/kF = %f \n",kc/kF);
 

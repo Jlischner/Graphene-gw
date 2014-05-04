@@ -2,7 +2,6 @@ function epsilon = Cdiel(qs, w);
   global vF;
   global EF;
   global Vc;
-  global e0;
 
   Omega = w;
 
@@ -13,7 +12,7 @@ function epsilon = Cdiel(qs, w);
   
   Pi0 = -qs.^2/16./sqrt(Omega.^2+vF^2*qs.^2);
   Pi = 4*chiMDF;
-  epsilon = e0 - Vc .* Pi;
+  epsilon = 1 - Vc .* Pi;
 #  epsilon = Pi;
 
 endfunction;
